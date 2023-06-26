@@ -1,11 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, BehaviorSubject, of, Subscription } from 'rxjs';
 import { map, catchError, switchMap, finalize } from 'rxjs/operators';
-import { UserModel } from '../models/user.model';
 import { AuthModel } from '../models/auth.model';
 import { AuthHTTPService } from './auth-http';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
+import { UserModel } from 'src/app/pages/user/user.model';
+import { UserService } from 'src/app/pages/user.service';
 
 export type UserType = UserModel | undefined;
 
@@ -13,6 +14,10 @@ export type UserType = UserModel | undefined;
   providedIn: 'root',
 })
 export class AuthService implements OnDestroy {
+  private userService: UserService 
+  createUser(user: UserModel) {
+    throw new Error('Method not implemented.');
+  }
   // private fields
   private unsubscribe: Subscription[] = []; // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
   private authLocalStorageToken = `${environment.appVersion}-${environment.USERDATA_KEY}`;
@@ -47,7 +52,7 @@ export class AuthService implements OnDestroy {
   login(email: string, password: string): Observable<UserType> {
     this.isLoadingSubject.next(true);
     return this.authHttpService.login(email, password).pipe(
-      map((auth: AuthModel) => {
+      map((auth: UserModel) => {
         const result = this.setAuthFromLocalStorage(auth);
         return result;
       }),
@@ -90,7 +95,7 @@ export class AuthService implements OnDestroy {
   // need create new user then login
   registration(user: UserModel): Observable<any> {
     this.isLoadingSubject.next(true);
-    return this.authHttpService.createUser(user).pipe(
+    return this.userService.createUser(user).pipe(
       map(() => {
         this.isLoadingSubject.next(false);
       }),

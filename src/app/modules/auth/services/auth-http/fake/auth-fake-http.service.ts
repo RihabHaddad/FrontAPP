@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import { UserModel } from '../../../models/user.model';
+import { UserModel } from 'src/app/pages/user/user.model';
 import { AuthModel } from '../../../models/auth.model';
 import { UsersTable } from '../../../../../_fake/users.table';
 import { environment } from '../../../../../../environments/environment';
@@ -48,15 +48,7 @@ export class AuthHTTPService {
     );
   }
 
-  createUser(user: UserModel): Observable<any> {
-    user.roles = [2]; // Manager
-    user.authToken = 'auth-token-' + Math.random();
-    user.refreshToken = 'auth-token-' + Math.random();
-    user.expiresIn = new Date(Date.now() + 100 * 24 * 60 * 60 * 1000);
-    user.pic = './assets/media/avatars/150-2.jpg';
 
-    return this.http.post<UserModel>(API_USERS_URL, user);
-  }
 
   forgotPassword(email: string): Observable<boolean> {
     return this.getAllUsers().pipe(

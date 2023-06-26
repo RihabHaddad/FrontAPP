@@ -1,4 +1,7 @@
-import { Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
+import { UserComponent } from './user/user.component';
+import { NgModule } from '@angular/core';
+import { routes } from '../app-routing.module';
 
 const Routing: Routes = [
   {
@@ -47,6 +50,21 @@ const Routing: Routes = [
     path: '**',
     redirectTo: 'error/404',
   },
+  { path: 'listuser' ,
+   component: UserComponent},
+
+ 
+   
+  
 ];
 
 export { Routing };
+@NgModule({
+  imports: [RouterModule.forRoot(Routing)],
+  exports: [RouterModule]
+})
+export class AppRoutingModule { }
+export const routingComponents = [
+  UserComponent,
+  
+];

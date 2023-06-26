@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription, Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
-import { UserModel } from '../../models/user.model';
+import { UserModel } from 'src/app/pages/user/user.model';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -13,10 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit, OnDestroy {
   // KeenThemes mock, change it to:
-  defaultAuth: any = {
-    email: 'admin@demo.com',
-    password: 'demo',
-  };
+ 
   loginForm: FormGroup;
   hasError: boolean;
   returnUrl: string;
@@ -53,7 +50,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   initForm() {
     this.loginForm = this.fb.group({
       email: [
-        this.defaultAuth.email,
+     
         Validators.compose([
           Validators.required,
           Validators.email,
@@ -62,7 +59,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         ]),
       ],
       password: [
-        this.defaultAuth.password,
+        
         Validators.compose([
           Validators.required,
           Validators.minLength(3),
