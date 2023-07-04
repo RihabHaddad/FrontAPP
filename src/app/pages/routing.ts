@@ -2,8 +2,11 @@ import { RouterModule, Routes } from '@angular/router';
 import { UserComponent } from './user/user.component';
 import { NgModule } from '@angular/core';
 import { routes } from '../app-routing.module';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 const Routing: Routes = [
+ 
+
   {
     path: 'dashboard',
     loadChildren: () =>
@@ -50,8 +53,7 @@ const Routing: Routes = [
     path: '**',
     redirectTo: 'error/404',
   },
-  { path: 'listuser' ,
-   component: UserComponent},
+
 
  
    

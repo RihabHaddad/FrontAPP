@@ -14,27 +14,23 @@ import { environment } from 'src/environments/environment';
 // #fake-start#
 import { FakeAPIService } from './_fake/fake-api.service';
 import { UserComponent } from './pages/user/user.component';
+import { SigninComponent } from './pages/signin/signin.component';
+import { FormsModule } from '@angular/forms';
 // #fake-end#
 
-function appInitializer(authService: AuthService) {
-  return () => {
-    return new Promise((resolve) => {
-      authService.getUserByToken().subscribe().add(resolve);
-    });
-  };
-}
 
 @NgModule({
-  declarations: [AppComponent,UserComponent],
+  declarations: [AppComponent,UserComponent, SigninComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     TranslateModule.forRoot(),
     HttpClientModule,
     ClipboardModule,
-    
-    
-    
+    FormsModule,
+ 
+
+
     // #fake-start#
     environment.isMockEnabled
       ? HttpClientInMemoryWebApiModule.forRoot(FakeAPIService, {
@@ -48,13 +44,9 @@ function appInitializer(authService: AuthService) {
     NgbModule,
   ],
   providers: [
-    {
-      provide: APP_INITIALIZER,
-      useFactory: appInitializer,
-      multi: true,
-      deps: [AuthService],
-    },
-  ],
+    
+      
+    ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -7,7 +7,7 @@ import { UserModel } from 'src/app/pages/user/user.model';
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'http://localhost:8002/api/auth/signup'; // Replace with your API endpoint
+  private apiUrl = 'http://localhost:8002/api/auth/signup';
 
   constructor(private http: HttpClient) { }
 

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../user.service';
+import { UserModel } from './user.model';
 
 @Component({
   selector: 'app-user',
@@ -7,9 +9,24 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserComponent implements OnInit {
 
-  constructor() { }
+  userList: UserModel []; // Remplacez le type "any[]" par le modèle approprié pour votre application
 
-  ngOnInit(): void {
+  constructor(private userService: UserService) {}
+
+  ngOnInit() {
+    this.getUserList();
   }
 
+  getUserList() {
+    this.userService.getUsers().subscribe(
+      (users) => {
+        this.userList = users;
+      },
+      (error) => {
+        console.error(error);
+      }
+    );
+  }
 }
+
+

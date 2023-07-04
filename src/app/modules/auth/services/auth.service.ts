@@ -1,12 +1,13 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, BehaviorSubject, of, Subscription } from 'rxjs';
 import { map, catchError, switchMap, finalize } from 'rxjs/operators';
+import { UserModel } from 'src/app/pages/user/user.model';
 import { AuthModel } from '../models/auth.model';
 import { AuthHTTPService } from './auth-http';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
-import { UserModel } from 'src/app/pages/user/user.model';
 import { UserService } from 'src/app/pages/user.service';
+import { HttpClient } from '@angular/common/http';
 
 export type UserType = UserModel | undefined;
 
@@ -14,19 +15,17 @@ export type UserType = UserModel | undefined;
   providedIn: 'root',
 })
 export class AuthService implements OnDestroy {
-  private userService: UserService 
-  createUser(user: UserModel) {
-    throw new Error('Method not implemented.');
-  }
   // private fields
   private unsubscribe: Subscription[] = []; // Read more: => https://brianflove.com/2016/12/11/anguar-2-unsubscribe-observables/
   private authLocalStorageToken = `${environment.appVersion}-${environment.USERDATA_KEY}`;
+  private userService: UserService 
 
   // public fields
   currentUser$: Observable<UserType>;
   isLoading$: Observable<boolean>;
   currentUserSubject: BehaviorSubject<UserType>;
   isLoadingSubject: BehaviorSubject<boolean>;
+
 
   get currentUserValue(): UserType {
     return this.currentUserSubject.value;
@@ -38,31 +37,27 @@ export class AuthService implements OnDestroy {
 
   constructor(
     private authHttpService: AuthHTTPService,
-    private router: Router
+    private router: Router,
+    private http: HttpClient
   ) {
     this.isLoadingSubject = new BehaviorSubject<boolean>(false);
     this.currentUserSubject = new BehaviorSubject<UserType>(undefined);
     this.currentUser$ = this.currentUserSubject.asObservable();
     this.isLoading$ = this.isLoadingSubject.asObservable();
-    const subscr = this.getUserByToken().subscribe();
-    this.unsubscribe.push(subscr);
+
   }
 
   // public methods
-  login(email: string, password: string): Observable<UserType> {
-    this.isLoadingSubject.next(true);
-    return this.authHttpService.login(email, password).pipe(
-      map((auth: UserModel) => {
-        const result = this.setAuthFromLocalStorage(auth);
-        return result;
-      }),
-      switchMap(() => this.getUserByToken()),
-      catchError((err) => {
-        console.error('err', err);
-        return of(undefined);
-      }),
-      finalize(() => this.isLoadingSubject.next(false))
-    );
+  private apiUrl = 'http://localhost:8002/api/auth'; // Remplacez cette URL par celle de votre API
+
+
+  login(email: string, password: string): Observable<any> {
+    const body = {
+      email: email,
+      password: password
+    };
+
+    return this.http.post(`${this.apiUrl}/login`, body);
   }
 
   logout() {
@@ -72,26 +67,9 @@ export class AuthService implements OnDestroy {
     });
   }
 
-  getUserByToken(): Observable<UserType> {
-    const auth = this.getAuthFromLocalStorage();
-    if (!auth || !auth.authToken) {
-      return of(undefined);
-    }
+  
 
-    this.isLoadingSubject.next(true);
-    return this.authHttpService.getUserByToken(auth.authToken).pipe(
-      map((user: UserType) => {
-        if (user) {
-          this.currentUserSubject.next(user);
-        } else {
-          this.logout();
-        }
-        return user;
-      }),
-      finalize(() => this.isLoadingSubject.next(false))
-    );
-  }
-
+   
   // need create new user then login
   registration(user: UserModel): Observable<any> {
     this.isLoadingSubject.next(true);

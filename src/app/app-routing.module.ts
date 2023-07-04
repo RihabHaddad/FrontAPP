@@ -1,9 +1,16 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AuthGuard } from './modules/auth/services/auth.guard';
+import { SigninComponent } from './pages/signin/signin.component';
+import { UserComponent } from './pages/user/user.component';
+import { UserListComponent } from './_metronic/partials/content/cards/user-list/user-list.component';
 
 export const routes: Routes = [
+  { path: 'signin', component: SigninComponent },
+  { path: 'listuser' ,
+  component: UserComponent},
   {
+
     path: 'auth',
     loadChildren: () =>
       import('./modules/auth/auth.module').then((m) => m.AuthModule),
@@ -20,6 +27,9 @@ export const routes: Routes = [
       import('./_metronic/layout/layout.module').then((m) => m.LayoutModule),
   },
   { path: '**', redirectTo: 'error/404' },
+  
+ 
+  // Autres routes existantes...
 ];
 
 @NgModule({
